@@ -51,25 +51,57 @@ new Promise((resolve) => {
 /* ============================== Phase 5 ============================== */
 /* ------------------- turn setTimeout into a Promise ------------------ */
 
-// Your code here
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms)); // wraps setTimeout in a promise
+}
 
+async function waitWithMessage() {
+    await wait(2000); // waits for 2 seconds
+    console.log('2 seconds have passed'); // logs this after the wait
+}
 
+waitWithMessage();
 
 /* ============================== Phase 6 ============================== */
 /* -------------------- exploring reject and .catch -------------------- */
 
-// Your code here
+const tryRandomPromise = (random) => new Promise((resolve, reject) => {
+    if (random > 0.5) {
+        resolve('success!!!'); // if random is greater than 0.5, resolve the promise
+    } else {
+        reject('random error'); // otherwise reject the promise
+    }
+})
 
-
+for (let i = 1; i < 10; i++) {
+    const random = Math.random();
+    wait(2000 + random * 1000)
+        .then(() => tryRandomPromise(random))
+        .then(result => console.log('random try #', i, result))
+        .catch(error => console.error('random try #', i, error));
+}
 
 /* ============================== Phase 7 ============================== */
 /* ---------------- exploring async/await and try/catch ---------------- */
 
-// Your code here
+const tryTryAgain = async (i) => {
+    const random = Math.random();
 
+    await wait(3000 + random * 1000); // wait for 3-4 seconds
 
+    try {
+        const result = await tryRandomPromise(random); // wait for randomPromise to resolve
+        console.log('random again #', i, result);
+    } catch (error) {
+        console.error('random again #', i, error); // handle rejection
+    }
+}
+
+for (let i = 1; i < 10; i++) {
+    tryTryAgain(i); // call the async function for each iteration
+}
 
 /* ============================== Phase 8 ============================== */
 /* -------------------- Promises are asynchronous! --------------------- */
 
-// Your code here
+console.log('END OF PROGRAM');
